@@ -27,13 +27,15 @@ namespace ITblogAPI.Controllers
             configuration = _configuration;
         }
 
+
         //api/AppUser
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IEnumerable<AppUser>> GetUsers()
         {
             return await userService.Get();
         }
+
 
         //api/AppUser/1
         [HttpGet("{id}")]
@@ -42,6 +44,8 @@ namespace ITblogAPI.Controllers
             return await userService.Get(id);
         }
 
+
+        //api/AppUser/Register
         [HttpPost]
         [Route("Register")]
         public async Task<ActionResult<AppUser>> RegisterUser([FromBody] Register model)
@@ -69,6 +73,8 @@ namespace ITblogAPI.Controllers
             return Ok(new { Message = "Rejestracja zakończona sukcesem" });
         }
 
+
+        //api/AppUser/Login
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<AppUser>> LoginUser([FromBody] Login model)
@@ -83,6 +89,7 @@ namespace ITblogAPI.Controllers
 
         }
 
+
         /*[HttpPost]
         [Route("Logout")]
         public Task<ActionResult> LogoutUser()
@@ -92,6 +99,7 @@ namespace ITblogAPI.Controllers
 
             return Ok();
         }*/
+
 
         [HttpPut]
         public async Task<ActionResult> PutUser(string id, [FromBody] AppUser model)
@@ -112,6 +120,10 @@ namespace ITblogAPI.Controllers
             await userService.Delete(userToDelete.Id);
             return NoContent();
         }
+
+
+
+        //Essentials
 
         private async Task<AppUser> ValidateUser(Login model)
         {
@@ -141,14 +153,14 @@ namespace ITblogAPI.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, identityUser.UserName.ToString()),
-                    new Claim(ClaimTypes.Email, identityUser.Email)
+                    new Claim(ClaimTypes.Email, identityUser.Email),
+                    new Claim("FirstName", identityUser.FirstName!)
                 }),
                 Expires = DateTime.UtcNow.AddSeconds(jwtSettings.GetValue<double>("ExpiryTimeInSeconds")),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Audience = jwtSettings.GetSection("Audience").Value,
                 Issuer = jwtSettings.GetSection("Issuer").Value
             };
-
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
