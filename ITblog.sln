@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITblogAPI", "ITblogAPI\ITblogAPI.csproj", "{AB12D8FF-3E97-452D-AF46-F1F8040EAA37}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{8ACA0EC2-905A-4E9E-90EC-A7152C69649A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITblogWeb", "ITblogWeb\ITblogWeb.csproj", "{4FFC7B97-B1F7-41D4-9F23-BF87845BB0AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{AB12D8FF-3E97-452D-AF46-F1F8040EAA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB12D8FF-3E97-452D-AF46-F1F8040EAA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB12D8FF-3E97-452D-AF46-F1F8040EAA37}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8ACA0EC2-905A-4E9E-90EC-A7152C69649A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8ACA0EC2-905A-4E9E-90EC-A7152C69649A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8ACA0EC2-905A-4E9E-90EC-A7152C69649A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8ACA0EC2-905A-4E9E-90EC-A7152C69649A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FFC7B97-B1F7-41D4-9F23-BF87845BB0AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FFC7B97-B1F7-41D4-9F23-BF87845BB0AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FFC7B97-B1F7-41D4-9F23-BF87845BB0AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FFC7B97-B1F7-41D4-9F23-BF87845BB0AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

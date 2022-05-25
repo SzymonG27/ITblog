@@ -12,8 +12,8 @@ namespace ITblogAPI.Models
         [Required]
         [MaxLength(30)]
         public string? LastName { get; set; }
-        
+
         [Required]
-        public DateTime DateJoined { get; set; }
+        public DateTime DateJoined { get; set; } = DateTime.UtcNow;
     }
 }
