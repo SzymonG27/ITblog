@@ -1,5 +1,7 @@
 ﻿using ITblogAPI.Data;
+using ITblogAPI.Infrastructure;
 using ITblogAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITblogAPI.Services
@@ -31,10 +33,19 @@ namespace ITblogAPI.Services
             }
         }
 
-        public async Task<IEnumerable<Post>> Get()
+        public async Task<IEnumerable<Post>> Get([FromQuery] Pagination pagination)
         {
-            var posts = await dbContext.Posts.ToListAsync();
-            return posts;
+            var posts = dbContext.Posts
+                    .OrderByDescending(post => post.CreatedDate);
+
+            var paginationData = new PaginationData(posts.Count(), pagination.Page, pagination.ItemsPerPage);
+            //Can serialize here for project
+            var items = await posts
+                        .Skip((pagination.Page - 1) * pagination.ItemsPerPage)
+                        .Take(pagination.ItemsPerPage)
+                        .ToListAsync();
+
+            return items;
         }
 
         public async Task<Post> Get(int id)
@@ -45,6 +56,26 @@ namespace ITblogAPI.Services
                 return post;
             }
             return null!;
+        }
+
+        public async Task<IEnumerable<Post>> Get(string category, [FromQuery] Pagination pagination)
+        {
+            if (category == null)
+            {
+                return await dbContext.Posts.ToListAsync();
+            }
+            var posts = dbContext.Posts
+                    .Where(post => post.Category == category)
+                    .OrderByDescending(post => post.CreatedDate);
+
+            var paginationData = new PaginationData(posts.Count(), pagination.Page, pagination.ItemsPerPage);
+            //Can serialize here for project
+            var items = await posts
+                        .Skip((pagination.Page - 1) * pagination.ItemsPerPage)
+                        .Take(pagination.ItemsPerPage)
+                        .ToListAsync();
+
+            return items;
         }
 
         public async Task Update(Post post)

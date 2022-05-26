@@ -6,7 +6,6 @@ namespace ITblogAPI.Services
     {
         Task<IEnumerable<AppUser>> Get();
         Task<AppUser> Get(string id);
-        Task<AppUser> Create(AppUser model);
         Task Update(AppUser model);
         Task Delete(string id);
     }

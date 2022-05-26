@@ -69,7 +69,6 @@ namespace ITblogAPI.Controllers
                 return new BadRequestObjectResult(new { Message = "Rejestracja zakończona niepowodzeniem", 
                     Errors = dictionary});
             }
-
             return Ok(new { Message = "Rejestracja zakończona sukcesem" });
         }
 
@@ -102,7 +101,7 @@ namespace ITblogAPI.Controllers
 
 
         [HttpPut]
-        public async Task<ActionResult> PutUser(string id, [FromBody] AppUser model)
+        public async Task<ActionResult> PutUser(string id, [FromBody] AppUser model) //change password etc.
         {
             if (model.Id != id)
             {
@@ -125,7 +124,7 @@ namespace ITblogAPI.Controllers
 
         //Essentials
 
-        private async Task<AppUser> ValidateUser(Login model)
+        private async Task<AppUser> ValidateUser(Login model) //Todo: Change location to AppUserService
         {
             var identityUser = await userManager.FindByNameAsync(model.LoginUser);
             if (identityUser != null)

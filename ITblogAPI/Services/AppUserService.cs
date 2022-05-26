@@ -13,14 +13,6 @@ namespace ITblogAPI.Services
             dbContext = _dbContext;
         }
 
-        public async Task<AppUser> Create(AppUser model)
-        {
-            dbContext.Users.Add(model);
-            await dbContext.SaveChangesAsync();
-
-            return model;
-        }
-
         public async Task Delete(string id)
         {
             var userToDelete = await dbContext.Users.FindAsync(id);

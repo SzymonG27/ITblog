@@ -29,7 +29,7 @@ namespace ITblogAPI.Controllers
             return await commentService.Get(id);
         }
 
-        [HttpGet("GetFromPost/{postId}")]
+        [HttpGet("{postId}/FromPostId")]
         public async Task<IEnumerable<Comment>> GetCommentsFromPostId(int postId)
         {
             return await commentService.GetFromPostId(postId);
