@@ -30,7 +30,6 @@ namespace ITblogAPI.Controllers
 
         //api/AppUser
         [HttpGet]
-        [Authorize]
         public async Task<IEnumerable<AppUser>> GetUsers()
         {
             return await userService.Get();
@@ -52,7 +51,7 @@ namespace ITblogAPI.Controllers
         {
             if (!ModelState.IsValid || model == null)
             {
-                return new BadRequestObjectResult(new { Message = "Rejestracja zakończona niepowodzeniem" });
+                return new UnauthorizedObjectResult(new { Message = "Rejestracja zakończona niepowodzeniem" });
             }
             var identityUser = new AppUser() { UserName = model.UserName, Email = model.Email, FirstName = model.FirstName, 
                 LastName = model.LastName};
@@ -66,7 +65,7 @@ namespace ITblogAPI.Controllers
                     dictionary.AddModelError(error.Code, error.Description);
                 }
 
-                return new BadRequestObjectResult(new { Message = "Rejestracja zakończona niepowodzeniem", 
+                return new UnauthorizedObjectResult(new { Message = "Rejestracja zakończona niepowodzeniem", 
                     Errors = dictionary});
             }
             return Ok(new { Message = "Rejestracja zakończona sukcesem" });
@@ -81,7 +80,7 @@ namespace ITblogAPI.Controllers
             AppUser identityUser = await ValidateUser(model);
             if (!ModelState.IsValid || model == null || identityUser == null)
             {
-                return new BadRequestObjectResult(new { Message = "Logowanie zakończone niepowodzeniem" });
+                return new UnauthorizedObjectResult(new { Message = "Logowanie zakończone niepowodzeniem" });
             }
             var token = GenerateToken(identityUser);
             return Ok(new { Token=token, Message="Logowanie zakończone sukcesem" });

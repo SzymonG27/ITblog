@@ -1,0 +1,29 @@
+﻿@using System.Data
+@model DataTable
+@{
+    ViewData["Title"] = "Konta użytkowników API";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Imie</th>
+            <th>Nazwisko</th>
+            <th>Login</th>
+            <th>E-mail</th>
+            <th>Data dołączenia</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(DataRow row in Model.Rows)
+        {
+            <tr>
+                <td>@row["firstName"]</td>
+                <td>@row["lastName"]</td>
+                <td>@row["userName"]</td>
+                <td>@row["email"]</td>
+                <td>@row["dateJoined"]</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -39,7 +39,9 @@ namespace ITblogAPI.Services
                     .OrderByDescending(post => post.CreatedDate);
 
             var paginationData = new PaginationData(posts.Count(), pagination.Page, pagination.ItemsPerPage);
+
             //Can serialize here for project
+
             var items = await posts
                         .Skip((pagination.Page - 1) * pagination.ItemsPerPage)
                         .Take(pagination.ItemsPerPage)
@@ -69,7 +71,9 @@ namespace ITblogAPI.Services
                     .OrderByDescending(post => post.CreatedDate);
 
             var paginationData = new PaginationData(posts.Count(), pagination.Page, pagination.ItemsPerPage);
+
             //Can serialize here for project
+
             var items = await posts
                         .Skip((pagination.Page - 1) * pagination.ItemsPerPage)
                         .Take(pagination.ItemsPerPage)

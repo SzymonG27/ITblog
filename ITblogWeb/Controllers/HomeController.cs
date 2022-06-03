@@ -1,5 +1,6 @@
 ﻿using ITblogWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Diagnostics;
 
 namespace ITblogWeb.Controllers
