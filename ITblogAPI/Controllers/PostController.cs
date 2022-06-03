@@ -1,6 +1,7 @@
 ﻿using ITblogAPI.Infrastructure;
 using ITblogAPI.Models;
 using ITblogAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace ITblogAPI.Controllers
         }
 
         //api/Post
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<Post>> GetPosts([FromQuery] Pagination pagination)
         {
@@ -28,6 +30,7 @@ namespace ITblogAPI.Controllers
         }
 
         //api/Post/1
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<Post> GetPosts(int id)
         {
@@ -36,6 +39,7 @@ namespace ITblogAPI.Controllers
         }
 
         //api/Post/IT
+        [Authorize]
         [HttpGet("Category/{category}")]
         public async Task<IEnumerable<Post>> GetPosts(string category, [FromQuery] Pagination pagination)
         {
@@ -48,6 +52,7 @@ namespace ITblogAPI.Controllers
             return posts;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost([FromBody] Post model)
         {
@@ -55,6 +60,7 @@ namespace ITblogAPI.Controllers
             return CreatedAtAction(nameof(GetPosts), new { id = newPost.Id }, newPost);
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult> PutPost(int id, [FromBody] Post model)
         {
@@ -66,6 +72,7 @@ namespace ITblogAPI.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePost(int id)
         {

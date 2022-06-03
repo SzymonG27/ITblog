@@ -1,7 +1,9 @@
 ﻿using ITblogAPI.Data;
 using ITblogAPI.Models;
 using ITblogAPI.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -83,20 +85,27 @@ namespace ITblogAPI.Controllers
                 return new UnauthorizedObjectResult(new { Message = "Logowanie zakończone niepowodzeniem" });
             }
             var token = GenerateToken(identityUser);
+
+            //If you need to use webApi on client side change HttpOnly value to false -- 
+            // It will end up protecting against XSS attacks
+            HttpContext.Response.Cookies.Append("JwtToken", token, new CookieOptions { HttpOnly = true });
+
+
             return Ok(new { Token=token, Message="Logowanie zakończone sukcesem" });
 
         }
 
 
-        /*[HttpPost]
+        [HttpPost]
         [Route("Logout")]
-        public Task<ActionResult> LogoutUser()
+        public ActionResult LogoutUser()
         {
 
-            TODO: Delete JWT token     
+            HttpContext.Response.Cookies.Delete("JwtToken");
+            //TODO: Delete JWT token (not only cookie)
 
             return Ok();
-        }*/
+        }
 
 
         [HttpPut]
@@ -140,7 +149,7 @@ namespace ITblogAPI.Controllers
             return null!;
         }
 
-        private object GenerateToken(AppUser identityUser)
+        private string GenerateToken(AppUser identityUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwtSettings = configuration.GetSection("Jwt");
@@ -160,7 +169,8 @@ namespace ITblogAPI.Controllers
                 Issuer = jwtSettings.GetSection("Issuer").Value
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            var tokenString = tokenHandler.WriteToken(token);
+            return tokenString;
         }
     }
 }

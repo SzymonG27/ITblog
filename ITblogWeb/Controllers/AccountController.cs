@@ -34,5 +34,11 @@ namespace ITblogWeb.Controllers
             }
             return View();
         }
+
+        [HttpGet]
+        public IActionResult LoginAccount()
+        {
+            return View();
+        }
     }
 }

@@ -42,7 +42,21 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         ValidateLifetime = true
     };
+    options.Events = new JwtBearerEvents //Using cookies with authentication user
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.HttpContext.Request.Cookies["JwtToken"];
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+                return Task.CompletedTask;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
+
 
 
 //Scopes
@@ -96,6 +110,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
