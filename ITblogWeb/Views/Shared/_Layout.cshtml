@@ -30,6 +30,16 @@
             </div>
         </nav>
     </header>
+
+     @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success" role="alert">@TempData["Success"]</div>
+    }
+    else if (TempData["Fail"] != null)
+    {
+        <div class="alert alert-danger" role="alert">@TempData["Fail"]</div>
+    }
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

@@ -77,7 +77,7 @@ namespace ITblogAPI.Controllers
         //api/AppUser/Login
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<AppUser>> LoginUser([FromBody] Login model)
+        public async Task<ActionResult<AppUser>> LoginUser(Login model)
         {
             AppUser identityUser = await ValidateUser(model);
             if (!ModelState.IsValid || model == null || identityUser == null)
