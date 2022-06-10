@@ -40,7 +40,7 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
         ClockSkew = TimeSpan.Zero,
-        ValidateLifetime = true
+        ValidateLifetime = true,
     };
     options.Events = new JwtBearerEvents //Using cookies with authentication user
     {
@@ -63,6 +63,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

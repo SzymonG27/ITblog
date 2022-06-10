@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using ITblogWeb.Attributes;
 
 namespace ITblogWeb.Controllers
 {
@@ -12,6 +14,7 @@ namespace ITblogWeb.Controllers
 
         Uri baseAddress = new Uri("https://localhost:7064/api/");
 
+        [Authorize]
         public async Task<IActionResult> GetAccounts()
         {
             DataTable dt = new DataTable();
@@ -34,7 +37,7 @@ namespace ITblogWeb.Controllers
                 }
                 ViewData.Model = dt;
             }
-            return View();
+            return View(dt);
         }
 
         [HttpGet]
@@ -67,7 +70,11 @@ namespace ITblogWeb.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     TempData["Success"] = "Pomyślnie zalogowano do serwisu!";
-                    var test = response.Content.ReadAsStringAsync();
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var deserializeString = JsonConvert.DeserializeObject<Response>(responseString);
+                    
+                    HttpContext.Response.Cookies.Append("JwtToken", deserializeString!.Token!, new CookieOptions { HttpOnly = true });
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -78,7 +85,6 @@ namespace ITblogWeb.Controllers
             
         }
 
-        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             using (var client = new HttpClient())
@@ -92,6 +98,7 @@ namespace ITblogWeb.Controllers
                 byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
                 HttpResponseMessage response = await client.PostAsync("AppUser/Logout", byteContent);
+                HttpContext.Response.Cookies.Delete("JwtToken");
 
                 return RedirectToAction("Index", "Home");
             }

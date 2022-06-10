@@ -12,25 +12,32 @@ namespace ITblogAPI.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService postService;
-        public PostController(IPostService postService)
+        private readonly HttpContext context;
+        public PostController(IPostService postService, HttpContext context)
         {
             this.postService = postService;
+            this.context = context;
         }
 
         //api/Post
-        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<Post>> GetPosts([FromQuery] Pagination pagination)
         {
-            if (pagination.ItemsPerPage <= 0)
+            if (User.Identity!.IsAuthenticated)
             {
-                pagination.ItemsPerPage = 10;
+                if (pagination.ItemsPerPage <= 0)
+                {
+                    pagination.ItemsPerPage = 10;
+                }
+                return await postService.Get(pagination);
             }
-            return await postService.Get(pagination);
+            else
+            {
+                return null!;
+            }
         }
 
         //api/Post/1
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<Post> GetPosts(int id)
         {
@@ -39,7 +46,6 @@ namespace ITblogAPI.Controllers
         }
 
         //api/Post/IT
-        [Authorize]
         [HttpGet("Category/{category}")]
         public async Task<IEnumerable<Post>> GetPosts(string category, [FromQuery] Pagination pagination)
         {
@@ -52,7 +58,6 @@ namespace ITblogAPI.Controllers
             return posts;
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost([FromBody] Post model)
         {
@@ -60,7 +65,6 @@ namespace ITblogAPI.Controllers
             return CreatedAtAction(nameof(GetPosts), new { id = newPost.Id }, newPost);
         }
 
-        [Authorize]
         [HttpPut]
         public async Task<ActionResult> PutPost(int id, [FromBody] Post model)
         {
@@ -72,7 +76,6 @@ namespace ITblogAPI.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePost(int id)
         {

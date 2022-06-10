@@ -1,8 +1,8 @@
-﻿using ITblogAPI.Data;
+﻿using ITblogAPI.Attributes;
+using ITblogAPI.Data;
 using ITblogAPI.Models;
 using ITblogAPI.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +20,13 @@ namespace ITblogAPI.Controllers
     {
         private readonly IAppUserService userService;
         private readonly UserManager<AppUser> userManager;
-        private readonly IConfiguration configuration;
+        private readonly ITokenService tokenService;
         public AppUserController(IAppUserService _userService, UserManager<AppUser> _userManager, 
-            IConfiguration _configuration)
+                ITokenService tokenService)
         {
             userService = _userService;
             userManager = _userManager;
-            configuration = _configuration;
+            this.tokenService = tokenService;
         }
 
 
@@ -79,19 +79,27 @@ namespace ITblogAPI.Controllers
         [Route("Login")]
         public async Task<ActionResult<AppUser>> LoginUser(Login model)
         {
-            AppUser identityUser = await ValidateUser(model);
+            AppUser identityUser = await tokenService.ValidateUser(model);
             if (!ModelState.IsValid || model == null || identityUser == null)
             {
                 return new UnauthorizedObjectResult(new { Message = "Logowanie zakończone niepowodzeniem" });
             }
-            var token = GenerateToken(identityUser);
+            var token = tokenService.GenerateToken(identityUser);
 
-            //If you need to use webApi on client side change HttpOnly value to false -- 
-            // It will end up protecting against XSS attacks
-            HttpContext.Response.Cookies.Append("JwtToken", token, new CookieOptions { HttpOnly = true });
+            var validate = tokenService.ValidateToken(token);
 
-
-            return Ok(new { Token=token, Message="Logowanie zakończone sukcesem" });
+            if (validate == true)
+            {
+                //If you need to use webApi on client side change HttpOnly value to false -- 
+                // It will end up protecting against XSS attacks
+                //If you want to use normal login via header in swagger, delete lines with cookies
+                HttpContext.Response.Cookies.Append("JwtToken", token, new CookieOptions { HttpOnly = true });
+                return Ok(new { Token = token, Message = "Logowanie zakończone sukcesem" });
+            }
+            else
+            {
+                return BadRequest();
+            }
 
         }
 
@@ -126,51 +134,6 @@ namespace ITblogAPI.Controllers
             if (userToDelete == null) return BadRequest();
             await userService.Delete(userToDelete.Id);
             return NoContent();
-        }
-
-
-
-        //Essentials
-
-        private async Task<AppUser> ValidateUser(Login model) //Todo: Change location to AppUserService
-        {
-            var identityUser = await userManager.FindByNameAsync(model.LoginUser);
-            if (identityUser != null)
-            {
-                var result = userManager.PasswordHasher.VerifyHashedPassword(identityUser, identityUser.PasswordHash, model.Password);
-
-                if (result == PasswordVerificationResult.Success)
-                {
-                    return identityUser;
-                }
-                return null!;
-            }
-
-            return null!;
-        }
-
-        private string GenerateToken(AppUser identityUser)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtSettings = configuration.GetSection("Jwt");
-            var key = Encoding.ASCII.GetBytes(jwtSettings.GetSection("Key").Value);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, identityUser.UserName.ToString()),
-                    new Claim(ClaimTypes.Email, identityUser.Email),
-                    new Claim("FirstName", identityUser.FirstName!)
-                }),
-                Expires = DateTime.UtcNow.AddSeconds(jwtSettings.GetValue<double>("ExpiryTimeInSeconds")),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Audience = jwtSettings.GetSection("Audience").Value,
-                Issuer = jwtSettings.GetSection("Issuer").Value
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-            return tokenString;
         }
     }
 }
