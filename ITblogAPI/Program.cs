@@ -42,7 +42,7 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         ValidateLifetime = true,
     };
-    options.Events = new JwtBearerEvents //Using cookies with authentication user
+    /*options.Events = new JwtBearerEvents //Using cookies with authentication user
     {
         OnMessageReceived = context =>
         {
@@ -54,7 +54,7 @@ builder.Services.AddAuthentication(options =>
             }
             return Task.CompletedTask;
         }
-    };
+    };*/
 });
 
 

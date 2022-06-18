@@ -93,7 +93,7 @@ namespace ITblogAPI.Controllers
                 //If you need to use webApi on client side change HttpOnly value to false -- 
                 // It will end up protecting against XSS attacks
                 //If you want to use normal login via header in swagger, delete lines with cookies
-                HttpContext.Response.Cookies.Append("JwtToken", token, new CookieOptions { HttpOnly = true });
+                //HttpContext.Response.Cookies.Append("JwtToken", token, new CookieOptions { HttpOnly = true });
                 return Ok(new { Token = token, Message = "Logowanie zakończone sukcesem" });
             }
             else
@@ -105,11 +105,12 @@ namespace ITblogAPI.Controllers
 
 
         [HttpPost]
+        [Authorize]
         [Route("Logout")]
         public ActionResult LogoutUser()
         {
 
-            HttpContext.Response.Cookies.Delete("JwtToken");
+            //HttpContext.Response.Cookies.Delete("JwtToken");
             //TODO: Delete JWT token (not only cookie)
 
             return Ok();

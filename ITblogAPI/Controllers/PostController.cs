@@ -1,7 +1,7 @@
-﻿using ITblogAPI.Infrastructure;
+﻿using ITblogAPI.Attributes;
+using ITblogAPI.Infrastructure;
 using ITblogAPI.Models;
 using ITblogAPI.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,29 +12,22 @@ namespace ITblogAPI.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService postService;
-        private readonly HttpContext context;
-        public PostController(IPostService postService, HttpContext context)
+        public PostController(IPostService postService)
         {
             this.postService = postService;
-            this.context = context;
         }
 
         //api/Post
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<Post>> GetPosts([FromQuery] Pagination pagination)
         {
-            if (User.Identity!.IsAuthenticated)
+            if (pagination.ItemsPerPage <= 0)
             {
-                if (pagination.ItemsPerPage <= 0)
-                {
-                    pagination.ItemsPerPage = 10;
-                }
-                return await postService.Get(pagination);
+                pagination.ItemsPerPage = 10;
+                
             }
-            else
-            {
-                return null!;
-            }
+            return await postService.Get(pagination);
         }
 
         //api/Post/1

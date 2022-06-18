@@ -1,5 +1,7 @@
 ﻿using ITblogWeb.Models;
+using ITblogWeb.Models.Post;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Data;
 using System.Diagnostics;
 using System.Net.Http.Headers;
@@ -17,9 +19,29 @@ namespace ITblogWeb.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var token = HttpContext.Request.Cookies["JwtToken"];
+            if (token == null)
+            {
+                return View();
+            }
+            using(var client = new HttpClient())
+            {
+                client.BaseAddress = baseAddress;
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var authenticationValue = new AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Authorization = authenticationValue;
+                
+
+                HttpResponseMessage response = await client.GetAsync("Post?Page=1&ItemsPerPage=50");
+                var responseString = await response.Content.ReadAsStringAsync();
+                var deserializeResponse = JsonConvert.DeserializeObject<IEnumerable<ResponsePost>>(responseString);
+                return View(deserializeResponse);
+            }
+            
         }
 
         public IActionResult Privacy()

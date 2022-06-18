@@ -85,6 +85,7 @@ namespace ITblogWeb.Controllers
             
         }
 
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             using (var client = new HttpClient())
@@ -93,6 +94,17 @@ namespace ITblogWeb.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+                //Add token to authorization header
+                var token = HttpContext.Request.Cookies["JwtToken"];
+                if (token == null)
+                {
+                    TempData["Fail"] = "Najpierw musisz być zalogowany!";
+                    return RedirectToAction("Index", "Home");
+                }
+                var authenticationValue = new AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Authorization = authenticationValue;
+
+                //TODO
                 var buffer = Encoding.UTF8.GetBytes("NOTHING");
                 var byteContent = new ByteArrayContent(buffer);
                 byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
