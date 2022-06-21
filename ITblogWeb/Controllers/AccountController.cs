@@ -40,9 +40,62 @@ namespace ITblogWeb.Controllers
             return View(dt);
         }
 
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            var userCookie = HttpContext.Request.Cookies["JwtToken"];
+            if (userCookie != null)
+            {
+                TempData["Fail"] = "Jesteś już zalogowany!";
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(Register model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = baseAddress;
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var registerValues = JsonConvert.SerializeObject(model);
+                var buffer = Encoding.UTF8.GetBytes(registerValues);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                HttpResponseMessage response = await client.PostAsync("AppUser/Register", byteContent);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["Success"] = "Pomyślnie się zarejestrowałeś! Teraz zaloguj się do serwisu";
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    TempData["Fail"] = "Błąd! Spróbuj ponownie za jakiś czas";
+                    return View(model);
+                }
+            }
+        }
+
+
         [HttpGet]
         public IActionResult Login()
         {
+            var userCookie = HttpContext.Request.Cookies["JwtToken"];
+            if (userCookie != null)
+            {
+                TempData["Fail"] = "Jesteś już zalogowany!";
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -79,6 +132,7 @@ namespace ITblogWeb.Controllers
                 }
                 else
                 {
+                    TempData["Fail"] = "Błąd! Spróbuj ponownie za jakiś czas";
                     return View(model);
                 }
             }

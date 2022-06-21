@@ -31,6 +31,7 @@ namespace ITblogAPI.Controllers
         }
 
         //api/Post/1
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<Post> GetPosts(int id)
         {
@@ -38,7 +39,8 @@ namespace ITblogAPI.Controllers
             return post;
         }
 
-        //api/Post/IT
+        //api/Post/Category/IT
+        [Authorize]
         [HttpGet("Category/{category}")]
         public async Task<IEnumerable<Post>> GetPosts(string category, [FromQuery] Pagination pagination)
         {
@@ -52,7 +54,7 @@ namespace ITblogAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost([FromBody] Post model)
+        public async Task<ActionResult<Post>> PostPost(Post model)
         {
             var newPost = await postService.Create(model);
             return CreatedAtAction(nameof(GetPosts), new { id = newPost.Id }, newPost);

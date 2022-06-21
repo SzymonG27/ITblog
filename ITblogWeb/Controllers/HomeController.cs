@@ -39,7 +39,10 @@ namespace ITblogWeb.Controllers
                 HttpResponseMessage response = await client.GetAsync("Post?Page=1&ItemsPerPage=50");
                 var responseString = await response.Content.ReadAsStringAsync();
                 var deserializeResponse = JsonConvert.DeserializeObject<IEnumerable<ResponsePost>>(responseString);
-                return View(deserializeResponse);
+                return View(new HomeViewModel
+                {
+                    ResponsePosts = deserializeResponse
+                });
             }
             
         }

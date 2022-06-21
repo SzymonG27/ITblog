@@ -25,5 +25,6 @@ namespace ITblogAPI.Models
         public string? ImageName { get; set; }
 
         public int Likes { get; set; }
+
     }
 }

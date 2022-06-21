@@ -1,0 +1,30 @@
+﻿@model PostViewModel
+@{
+    ViewData["Title"] = "Stwórz post";
+}
+
+<h1 class="text-center">Stwórz post</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="category" class="form-label">Wybierz kategorie: </label>
+        <select asp-for="@Model.Post!.Category" id="category" class="form-select">
+            <partial name="_PartialOptionCategory" />
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="formPhoto" class="form-label">Wybierz zdjęcie</label>
+        <input asp-for="@Model.Photo" class="form-control" id="formPhoto" type="file" accept="image/png, image/jpeg">
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Nagłówek (max 50 znaków)</label>
+        <input type="text" class="form-control" placeholder="Nagłówek" asp-for="@Model.Post!.Title" />
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Tekst</label>
+        <textarea class="form-control" aria-label="With textarea" asp-for="@Model.Post!.Content"></textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Dodaj post</button>
+</form>
+
+

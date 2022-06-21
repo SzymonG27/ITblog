@@ -1,18 +1,47 @@
-﻿@model IEnumerable<ResponsePost>
+﻿@model HomeViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
 @if (Model != null)
 {
-    @foreach (var post in Model)
-    {
-        <div>@post.id</div>
-    }
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" id="dropCategory" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Kategoria
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropCategory">
+                <li><a class="dropdown-item" href="#">IT</a></li>
+                <li><a class="dropdown-item" href="#">Motoryzacja</a></li>
+                <li><a class="dropdown-item" href="#">Sport</a></li>
+            </ul>
+        </div>
+
+        <div class="container">
+            <div class="row row-cols-xs-1 row-cols-md-2 row-cols-lg-3">
+                @foreach (var post in Model.ResponsePosts!)
+                {           
+                    <div class="col">
+                        <div class="card">
+                            <img src="~/Images/@post.ImageName" class="card-img-top" style="max-height=50%">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">@post.Title</h5>
+                                <p class="card-subtitle mb-2 text-muted text-center">@post.Category</p>
+                                <p class="card-text text-center">@post.Content!.PadLeft(20) ...</p>
+                                <form asp-action="Details" asp-controller="Post" method="get">
+                                    <input type="hidden" asp-for="@Model.PostId" value="@post.Id" />
+                                    <button type="submit" class="btn btn-primary text-center">Czytaj dalej</button>
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    
 }
 

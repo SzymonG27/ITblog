@@ -1,14 +1,28 @@
-﻿namespace ITblogWeb.Models.Post
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ITblogWeb.Models.Post
 {
     public class ResponsePost
     {
-        public int id { get; set; }
-        public string? authorId { get; set; }
-        public string? category { get; set; }
-        public string? title { get; set; }
-        public string? content { get; set; }
-        public DateTime createdDate { get; set; }
-        public string? imageName { get; set; }
-        public int likes { get; set; }
+        [Key]
+        public int Id { get; set; }
+
+        public string? AuthorId { get; set; }
+
+        [Required]
+        public string? Category { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string? Title { get; set; }
+
+        [Required]
+        public string? Content { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public string? ImageName { get; set; }
+
+        public int Likes { get; set; }
     }
 }
