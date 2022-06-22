@@ -45,6 +45,14 @@ namespace ITblogAPI.Controllers
             return await userService.Get(id);
         }
 
+        //api/AppUser/Check
+        [HttpGet]
+        [Route("Check")]
+        public async Task<AppUser> GetUser(string name, string mail)
+        {
+            return await userService.CheckUser(name, mail);
+        }
+
 
         //api/AppUser/Register
         [HttpPost]

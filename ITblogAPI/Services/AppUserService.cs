@@ -39,6 +39,26 @@ namespace ITblogAPI.Services
             return null!;
         }
 
+        public async Task<AppUser> CheckUser(string name, string mail) //NOT RESTful, will be changed
+        {
+            var isUserNameExist = await dbContext.Users.FirstOrDefaultAsync(n => n.UserName == name);
+            if (isUserNameExist != null)
+            {
+                return new AppUser { 
+                    UserName = name
+                };
+            }
+            var isMailExist = await dbContext.Users.FirstOrDefaultAsync(n => n.Email == mail);
+            if (isMailExist != null)
+            {
+                return new AppUser
+                {
+                    Email = mail
+                };
+            }
+            return null!;
+        }
+
         public async Task Update(AppUser model)
         {
             dbContext.Entry(model).State = EntityState.Modified;

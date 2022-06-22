@@ -129,7 +129,6 @@ namespace ITblogWeb.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                //TODO: Check if username and email are not duplicated in database
 
                 HttpResponseMessage response = await client.GetAsync("Post/" + model.PostId);
 

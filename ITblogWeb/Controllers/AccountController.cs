@@ -1,6 +1,7 @@
 ﻿using ITblogWeb.Models.Account;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
@@ -70,6 +71,27 @@ namespace ITblogWeb.Controllers
                 var buffer = Encoding.UTF8.GetBytes(registerValues);
                 var byteContent = new ByteArrayContent(buffer);
                 byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                //Check if username and email are not duplicated in database
+                HttpResponseMessage checkUser = await client.GetAsync("AppUser/Check?name=" + model.UserName +
+                    "&mail=" + model.Email);
+                var checkUserString = await checkUser.Content.ReadAsStringAsync();
+                if (checkUserString != "")
+                {
+                    var userName = JObject.Parse(checkUserString)["userName"]!.ToString();
+                    if (userName != "")
+                    {
+                        TempData["Fail"] = "Taka nazwa użytkownika istnieje już w bazie danych.";
+                        return View(model);
+                    }
+                    var mail = JObject.Parse(checkUserString)["email"]!.ToString();
+                    if (mail != "")
+                    {
+                        TempData["Fail"] = "Taki mail istnieje już w bazie danych.";
+                        return View(model);
+                    }
+                }
+                
 
                 HttpResponseMessage response = await client.PostAsync("AppUser/Register", byteContent);
 
