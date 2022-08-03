@@ -1,6 +1,50 @@
-﻿@model ResponsePost
+﻿@model PostComments
 @{
     ViewData["Title"] = "Szczegóły wpisu";
 }
 
 
+<h1 class="text-center mb-5">@Model.ResponsePost!.Title</h1>
+
+<img src="~/Images/@Model.ResponsePost.ImageName" class="img-fluid ms-auto me-auto mb-5" alt="Blog image" style="height: 50vh; width:auto;">
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-center row">
+        <div class="col-md-8">
+            <div class="d-flex flex-column comment-section">
+                @foreach (var comment in Model.Messages!)
+                {
+                <div class="bg-white p-2" style="border: 0.5px solid; border-color: blue;">
+                    <div class="d-flex flex-row user-info">
+                        <div class="d-flex flex-column justify-content-start ml-2">
+                            <span class="d-block font-weight-bold name"></span>
+                            <span class="date text-black-50">Opublikowano - @comment.CreatedDate</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <p class="comment-text">@comment.Content</p>
+                    </div>
+                    <div class="mt-2">
+                        <div class="like p-2 cursor">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            <span class="ms-1">Like</span>
+                            <span class="ms-2">@comment.Likes</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-light p-2">
+                    <div class="d-flex flex-row align-items-start">
+                        <i class="fa-solid fa-user"></i>
+                        <textarea class="form-control ms-1 shadow-none textarea"></textarea>
+                    </div>
+                    <div class="mt-2 text-right">
+                        <button class="btn btn-primary btn-sm shadow-none" type="button">Dodaj komentarz
+                            <i class="fa-solid fa-arrow-right-long fa-2xl ms-2"></i></button>
+                    </div>
+                </div>
+                }
+                
+            </div>
+        </div>
+    </div>
+</div>

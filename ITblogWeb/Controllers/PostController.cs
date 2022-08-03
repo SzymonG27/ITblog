@@ -1,4 +1,5 @@
 ﻿using ITblogWeb.Models;
+using ITblogWeb.Models.Comment;
 using ITblogWeb.Models.Post;
 using ITblogWeb.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -136,7 +137,23 @@ namespace ITblogWeb.Controllers
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
                     var content = JsonConvert.DeserializeObject<ResponsePost>(responseString);
-                    return View(content);
+                    HttpResponseMessage commentResponse = await client.GetAsync("Comment/" + content!.Id + "/FromPostId");
+                    if (commentResponse.IsSuccessStatusCode)
+                    {
+                        var responseComment = await commentResponse.Content.ReadAsStringAsync();
+                        var comments = JsonConvert.DeserializeObject<IEnumerable<Message>>(responseComment);
+                        return View(new PostComments
+                        {
+                            ResponsePost = content,
+                            Messages = comments
+                        });
+                    }
+                    else
+                    {
+                        TempData["Fail"] = "Błąd! Spróbuj ponownie za jakiś czas";
+                        return RedirectToAction("Index", "Home");
+                    }
+                    
                 }
                 else
                 {
