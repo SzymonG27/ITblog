@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Szczegóły wpisu";
 }
-
+<div asp-validation-summary="All" class="text-danger"></div>
 
 <h1 class="text-center mb-5">@Model.ResponsePost!.Title</h1>
 
@@ -14,10 +14,10 @@
             <div class="d-flex flex-column comment-section">
                 @foreach (var comment in Model.Messages!)
                 {
-                <div class="bg-white p-2" style="border: 0.5px solid; border-color: blue;">
+                <div class="bg-white p-2" style="border-bottom: 0.5px solid; border-bottom-color: darkgrey;">
                     <div class="d-flex flex-row user-info">
                         <div class="d-flex flex-column justify-content-start ml-2">
-                            <span class="d-block font-weight-bold name"></span>
+                            <span class="d-block font-weight-bold name">@comment.AuthorName @comment.AuthorSurname</span>
                             <span class="date text-black-50">Opublikowano - @comment.CreatedDate</span>
                         </div>
                     </div>
@@ -32,18 +32,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-light p-2">
-                    <div class="d-flex flex-row align-items-start">
-                        <i class="fa-solid fa-user"></i>
-                        <textarea class="form-control ms-1 shadow-none textarea"></textarea>
-                    </div>
-                    <div class="mt-2 text-right">
-                        <button class="btn btn-primary btn-sm shadow-none" type="button">Dodaj komentarz
-                            <i class="fa-solid fa-arrow-right-long fa-2xl ms-2"></i></button>
-                    </div>
-                </div>
                 }
                 
+                <form asp-action="AddComment" asp-controller="Comment" method="post" 
+                    asp-route-returnurl="@Context.Request.Path.Value@Context.Request.QueryString.Value">
+
+                   @Html.HiddenFor(p => p.ResponsePost!.Id)
+                    <div class="bg-light p-2 mt-4">
+                        <div class="d-flex flex-row align-items-start">
+                            <i class="fa-solid fa-user fa-2xl" style="padding-top: 30px;"></i>
+                            <textarea class="form-control ms-1 shadow-none textarea" asp-for="CommentToAdd"></textarea>
+                        </div>
+                        <div class="mt-2 text-right">
+                            <button class="btn btn-primary btn-sm shadow-none" type="submit">Dodaj komentarz
+                                <i class="fa-solid fa-arrow-right-long fa-2xl ms-2"></i></button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

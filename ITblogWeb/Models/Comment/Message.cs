@@ -14,6 +14,12 @@ namespace ITblogWeb.Models.Comment
         public string? AuthorId { get; set; }
 
         [Required]
+        public string? AuthorName { get; set; }
+
+        [Required]
+        public string? AuthorSurname { get; set; }
+
+        [Required]
         public DateTime CreatedDate { get; set; }
 
         [Required]

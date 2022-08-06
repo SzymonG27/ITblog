@@ -18,6 +18,12 @@ namespace ITblogAPI.Models
 
         [Required]
         public string? Content { get; set; }
+        
+        [Required]
+        public string? AuthorName { get; set; }
+
+        [Required]
+        public string? AuthorSurname { get; set; }
 
         public int Likes { get; set; }
     }

@@ -17,6 +17,8 @@ namespace ITblogAPI.Migrations.ApplicationDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PostId = table.Column<int>(type: "int", nullable: false),
                     AuthorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthorName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthorSurname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Content = table.Column<int>(type: "nvarchar(max)", nullable: false),
                     Likes = table.Column<int>(type: "int", nullable: false)
@@ -46,13 +48,5 @@ namespace ITblogAPI.Migrations.ApplicationDb
                 });
         }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Comments");
-
-            migrationBuilder.DropTable(
-                name: "Posts");
-        }
     }
 }

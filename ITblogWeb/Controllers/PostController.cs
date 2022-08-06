@@ -129,7 +129,8 @@ namespace ITblogWeb.Controllers
                 client.BaseAddress = baseAddress;
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+                var authenticationValue = new AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Authorization = authenticationValue;
 
                 HttpResponseMessage response = await client.GetAsync("Post/" + model.PostId);
 
@@ -137,7 +138,7 @@ namespace ITblogWeb.Controllers
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
                     var content = JsonConvert.DeserializeObject<ResponsePost>(responseString);
-                    HttpResponseMessage commentResponse = await client.GetAsync("Comment/" + content!.Id + "/FromPostId");
+                    HttpResponseMessage commentResponse = await client.GetAsync("Comment/" + content!.Id + "/FromPostId"); //404
                     if (commentResponse.IsSuccessStatusCode)
                     {
                         var responseComment = await commentResponse.Content.ReadAsStringAsync();

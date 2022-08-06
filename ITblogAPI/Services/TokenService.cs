@@ -48,7 +48,8 @@ namespace ITblogAPI.Services
                     new Claim("id", identityUser.Id),
                     new Claim(ClaimTypes.Name, identityUser.UserName.ToString()),
                     new Claim(ClaimTypes.Email, identityUser.Email),
-                    new Claim("FirstName", identityUser.FirstName!)
+                    new Claim("FirstName", identityUser.FirstName!),
+                    new Claim("LastName", identityUser.LastName!)
                 }),
                 Expires = DateTime.UtcNow.AddSeconds(jwtSettings.GetValue<double>("ExpiryTimeInSeconds")),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),

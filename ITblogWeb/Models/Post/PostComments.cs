@@ -1,4 +1,5 @@
 ﻿using ITblogWeb.Models.Comment;
+using System.ComponentModel.DataAnnotations;
 
 namespace ITblogWeb.Models.Post
 {
@@ -6,5 +7,9 @@ namespace ITblogWeb.Models.Post
     {
         public ResponsePost? ResponsePost { get; set; }
         public IEnumerable<Message>? Messages { get; set; }
+
+        [MinLength(5, ErrorMessage = "Musisz wpisać minimum 5 znaków aby móc opublikować komentarz!")]
+        [MaxLength(150, ErrorMessage = "Przekroczyłeś liczbę dozwolonych znaków dla komentarza (max 150)")]
+        public string? CommentToAdd { get; set; }
     }
 }
