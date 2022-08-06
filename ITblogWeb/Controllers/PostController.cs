@@ -133,12 +133,17 @@ namespace ITblogWeb.Controllers
                 client.DefaultRequestHeaders.Authorization = authenticationValue;
 
                 HttpResponseMessage response = await client.GetAsync("Post/" + model.PostId);
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    TempData["Fail"] = "Wpis o takim id nie istnieje!";
+                    return RedirectToAction("Index", "Home");
+                }
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseString = await response.Content.ReadAsStringAsync();
+                    var responseString = await response.Content!.ReadAsStringAsync();
                     var content = JsonConvert.DeserializeObject<ResponsePost>(responseString);
-                    HttpResponseMessage commentResponse = await client.GetAsync("Comment/" + content!.Id + "/FromPostId"); //404
+                    HttpResponseMessage commentResponse = await client.GetAsync("Comment/" + content!.Id + "/FromPostId");
                     if (commentResponse.IsSuccessStatusCode)
                     {
                         var responseComment = await commentResponse.Content.ReadAsStringAsync();
@@ -154,7 +159,6 @@ namespace ITblogWeb.Controllers
                         TempData["Fail"] = "Błąd! Spróbuj ponownie za jakiś czas";
                         return RedirectToAction("Index", "Home");
                     }
-                    
                 }
                 else
                 {

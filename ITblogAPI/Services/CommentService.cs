@@ -52,7 +52,11 @@ namespace ITblogAPI.Services
         public async Task<IEnumerable<Comment>> GetFromPostId(int postId)
         {
             var comments = await dbContext.Comments.Where(c => c.PostId == postId).ToListAsync();
-            return comments;
+            if (comments != null)
+            {
+                return comments;
+            }
+            return null!;
         }
 
         public async Task Update(Comment model)

@@ -32,7 +32,12 @@ namespace ITblogAPI.Controllers
         [HttpGet("{postId}/FromPostId")]
         public async Task<IEnumerable<Comment>> GetCommentsFromPostId(int postId)
         {
-            return await commentService.GetFromPostId(postId);
+            var post = await commentService.GetFromPostId(postId);
+            if (post == null)
+            {
+                return Enumerable.Empty<Comment>();
+            }
+            return post!;
         }
 
         [HttpPost]
