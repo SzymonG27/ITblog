@@ -26,18 +26,24 @@
                     </div>
                     <div class="mt-2">
                         <div class="like p-2 cursor">
-                            <i class="fa-solid fa-thumbs-up"></i>
-                            <span class="ms-1">Like</span>
-                            <span class="ms-2">@comment.Likes</span>
+                            <form asp-action="Like" asp-controller="Comment" method="post" 
+                            asp-route-returnurl="@Context.Request.Path.Value@Context.Request.QueryString.Value">
+                                <input type="hidden" asp-for="MessageId" value="@comment.Id" />
+                                <button type="submit" class="btn-outline-primary" style="border: 0;">
+                                    <i class="fa-solid fa-thumbs-up"></i>
+                                    <span class="ms-1">Like</span>
+                                    <span class="ms-2">@comment.Likes</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
                 }
                 
                 <form asp-action="AddComment" asp-controller="Comment" method="post" 
-                    asp-route-returnurl="@Context.Request.Path.Value@Context.Request.QueryString.Value">
+                asp-route-returnurl="@Context.Request.Path.Value@Context.Request.QueryString.Value">
 
-                   @Html.HiddenFor(p => p.ResponsePost!.Id)
+                    @Html.HiddenFor(p => p.ResponsePost!.Id)
                     <div class="bg-light p-2 mt-4">
                         <div class="d-flex flex-row align-items-start">
                             <i class="fa-solid fa-user fa-2xl" style="padding-top: 30px;"></i>

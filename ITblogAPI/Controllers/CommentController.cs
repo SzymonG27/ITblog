@@ -48,12 +48,8 @@ namespace ITblogAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> PutComment(int id, [FromBody] Comment model)
+        public async Task<ActionResult> PutComment([FromBody] Comment model)
         {
-            if (model.Id != id)
-            {
-                return BadRequest();
-            }
             await commentService.Update(model);
             return NoContent();
         }
