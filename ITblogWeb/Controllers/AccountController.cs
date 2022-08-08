@@ -79,13 +79,13 @@ namespace ITblogWeb.Controllers
                 if (checkUserString != "")
                 {
                     var userName = JObject.Parse(checkUserString)["userName"]!.ToString();
-                    if (userName != "")
+                    if (userName != "") //string cannot be null
                     {
                         TempData["Fail"] = "Taka nazwa użytkownika istnieje już w bazie danych.";
                         return View(model);
                     }
                     var mail = JObject.Parse(checkUserString)["email"]!.ToString();
-                    if (mail != "")
+                    if (mail != "") //string cannot be null
                     {
                         TempData["Fail"] = "Taki mail istnieje już w bazie danych.";
                         return View(model);

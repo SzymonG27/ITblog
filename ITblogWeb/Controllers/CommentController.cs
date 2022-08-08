@@ -30,9 +30,9 @@ namespace ITblogWeb.Controllers
 
             using (var client = new HttpClient())
             {
-
-                var token = HttpContext.Request.Cookies["JwtToken"];
-                var handler = new JwtSecurityTokenHandler();
+                
+                var token = HttpContext.Request.Cookies["JwtToken"];    //Get claims from token (check ITBlogAPI>Services>TokenService
+                var handler = new JwtSecurityTokenHandler();            //To get all claims)
                 var jwtSecurityToken = handler.ReadJwtToken(token);
                 IEnumerable<Claim> claims = jwtSecurityToken.Claims;
                 var userId = claims.FirstOrDefault(p => p.Type == "id");
@@ -43,7 +43,7 @@ namespace ITblogWeb.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var authenticationValue = new AuthenticationHeaderValue("Bearer", token);
+                var authenticationValue = new AuthenticationHeaderValue("Bearer", token);   //Add Bearer authorization
                 client.DefaultRequestHeaders.Authorization = authenticationValue;
 
                 Message message = new Message
@@ -83,7 +83,7 @@ namespace ITblogWeb.Controllers
             using (var client = new HttpClient())
             {
 
-                var token = HttpContext.Request.Cookies["JwtToken"];
+                var token = HttpContext.Request.Cookies["JwtToken"];   //Read token claims
                 var handler = new JwtSecurityTokenHandler();
                 var jwtSecurityToken = handler.ReadJwtToken(token);
                 IEnumerable<Claim> claims = jwtSecurityToken.Claims;
@@ -93,7 +93,7 @@ namespace ITblogWeb.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var authenticationValue = new AuthenticationHeaderValue("Bearer", token);
+                var authenticationValue = new AuthenticationHeaderValue("Bearer", token);      //Add Bearer authorization
                 client.DefaultRequestHeaders.Authorization = authenticationValue;
 
                 var getComment = await client.GetAsync("Comment/" + model.MessageId);
@@ -110,7 +110,7 @@ namespace ITblogWeb.Controllers
                     var content = JsonConvert.DeserializeObject<Message>(responseString);
 
                     var checkStatus = await client.GetAsync("CommentRelation/CheckRelation/" + userId!.Value + "&" + model.MessageId);
-                    if (checkStatus.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    if (checkStatus.StatusCode == System.Net.HttpStatusCode.NotFound) //NotFound - AddRelation, OK-Relation exists
                     {
                         CommentLikesRelation relation = new CommentLikesRelation
                         {
@@ -144,7 +144,7 @@ namespace ITblogWeb.Controllers
                         TempData["Fail"] = "Wystąpił problem! Spróbuj ponownie za jakiś czas.";
                         return Redirect(returnUrl!);
                     }
-                    else if (checkStatus.StatusCode == System.Net.HttpStatusCode.OK)
+                    else if (checkStatus.StatusCode == System.Net.HttpStatusCode.OK) //OK - DeleteRelation, NotFound - Relation not exists
                     {
                         var removeRelation = await client.DeleteAsync("CommentRelation/" + userId!.Value + "&" + model.MessageId);
                         if (removeRelation.IsSuccessStatusCode)
@@ -167,7 +167,7 @@ namespace ITblogWeb.Controllers
                         TempData["Fail"] = "Wystąpił problem! Spróbuj ponownie za jakiś czas.";
                         return Redirect(returnUrl!);
                     }
-                    TempData["Fail"] = "Wystąpił problem! Spróbuj ponownie za jakiś czas.";
+                    TempData["Fail"] = "Wystąpił problem! Spróbuj ponownie za jakiś czas."; //Another status code (not predictive)
                     return Redirect(returnUrl!);
                 }
                 TempData["Fail"] = "Wystąpił problem! Spróbuj ponownie za jakiś czas.";

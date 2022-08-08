@@ -53,6 +53,7 @@ namespace ITblogAPI.Controllers
             return posts;
         }
 
+        //api/Post
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(Post model)
         {
@@ -60,17 +61,15 @@ namespace ITblogAPI.Controllers
             return CreatedAtAction(nameof(GetPosts), new { id = newPost.Id }, newPost);
         }
 
+        //api/Post
         [HttpPut]
-        public async Task<ActionResult> PutPost(int id, [FromBody] Post model)
+        public async Task<ActionResult> PutPost([FromBody] Post model)
         {
-            if (model.Id != id)
-            {
-                return BadRequest();
-            }
             await postService.Update(model);
             return NoContent();
         }
 
+        //api/Post/1
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePost(int id)
         {

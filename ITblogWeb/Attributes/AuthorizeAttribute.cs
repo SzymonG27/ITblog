@@ -16,7 +16,7 @@ namespace ITblogWeb.Attributes
             if (allowAnonymous)
                 return;
 
-            // authorization
+            // authorization (delete cookie when time runs out)
             var user = context.HttpContext.Request.Cookies["JwtToken"];
             if (user == null)
             {

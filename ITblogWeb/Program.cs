@@ -8,11 +8,6 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<ITokenService, TokenService>();
 
-builder.Services.Configure<FormOptions>(options =>
-{
-    options.ValueCountLimit = int.MaxValue;
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

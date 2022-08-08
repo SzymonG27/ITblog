@@ -29,6 +29,7 @@ namespace ITblogAPI.Controllers
             return await commentService.Get(id);
         }
 
+        //api/Comment/1/FromPostId
         [HttpGet("{postId}/FromPostId")]
         public async Task<IEnumerable<Comment>> GetCommentsFromPostId(int postId)
         {
@@ -40,6 +41,7 @@ namespace ITblogAPI.Controllers
             return post!;
         }
 
+        //api/Comment
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment([FromBody] Comment model)
         {
@@ -47,6 +49,7 @@ namespace ITblogAPI.Controllers
             return CreatedAtAction(nameof(GetComments), new { id = newComment.Id }, newComment);
         }
 
+        //api/Comment
         [HttpPut]
         public async Task<ActionResult> PutComment([FromBody] Comment model)
         {
@@ -54,6 +57,7 @@ namespace ITblogAPI.Controllers
             return NoContent();
         }
 
+        //api/Comment/1
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteComment(int id)
         {

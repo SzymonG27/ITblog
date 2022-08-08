@@ -28,8 +28,9 @@ namespace ITblogAPI.Controllers
             return await service.Get(id);
         }
 
+        //api/CommentRelation/xxx-xxx-xxx&1
         [HttpGet("CheckRelation/{userId}&{commentId}")]
-        public async Task<ActionResult> GetCommentRelations(string userId, int commentId)
+        public async Task<ActionResult> GetCommentRelations(string userId, int commentId) //Check relation for AddLike (ItBlogWeb CommentController)
         {
             bool check = await service.IsRelation(new CommentLikesRelation
             {
@@ -46,6 +47,7 @@ namespace ITblogAPI.Controllers
             }
         }
 
+        //api/CommentRelation
         [HttpPost]
         public async Task<ActionResult<CommentLikesRelation>> PostCommentRelation([FromBody] CommentLikesRelation model)
         {
@@ -53,6 +55,7 @@ namespace ITblogAPI.Controllers
             return CreatedAtAction(nameof(GetCommentRelations), new { id = newCommentRelation.Id }, newCommentRelation);
         }
 
+        //api/CommentRelation/xxx-xxx-xxx&1
         [HttpDelete("{userId}&{commentId}")]
         public async Task<ActionResult> DeleteCommentRelation(string userId, int commentId)
         {
