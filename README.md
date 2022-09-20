@@ -1,4 +1,4 @@
-# ITblog v0.1
+# ITblog v1
 This is a .net 6.0 blog application with using webAPI + consuming in webApp.
 
 
