@@ -1,5 +1,5 @@
 # ITblog v0.1
-This is a .net 6.0 blog application with using webAPI + consuming in webApp (consuming nod ended yet).
+This is a .net 6.0 blog application with using webAPI + consuming in webApp.
 
 
 ## Technologies used
